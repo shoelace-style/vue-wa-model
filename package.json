@@ -2,7 +2,7 @@
   "name": "@shoelace-style/vue-wa-model",
   "version": "1.0.0",
   "description": "A custom Vue directive that makes two-way binding Shoelace components easier.",
-  "main": "dist/index.js",
+  "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
   "files": [
     "dist"

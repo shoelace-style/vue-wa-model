@@ -4,8 +4,10 @@ export default function (options = {}) {
 
   if (!options.events) { options.events = [] }
   if (!options.eventHandler) {
-    function _eventHandler(event) {
-      return (binding.instance[binding.value] = event.target.value);
+    function _eventHandler(binding) {
+      return {
+        handleEvent: (event) => (binding.instance[binding.value] = event.target.value)
+      }
     }
     options.eventHandler = _eventHandler
   }
@@ -27,12 +29,14 @@ export default function (options = {}) {
 
       app.directive("wa-model", {
         beforeMount(el, binding, _vnode) {
+
           wm.set(el, eventHandler);
+
           el.defaultValue = binding.value ?? null
           el.value = binding.value ?? null;
 
           events.forEach((eventName) => {
-            el.addEventListener(eventName, eventHandler);
+            el.addEventListener(eventName, eventHandler(binding));
           })
         },
         updated(el, binding) {

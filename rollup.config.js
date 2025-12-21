@@ -3,7 +3,7 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 
 export default {
-  input: 'src/vue-sl-model.js',
+  input: 'src/vue-wa-model.js',
   output: [
     { file: 'dist/index.js', format: 'cjs' },
     { file: 'dist/index.min.js', format: 'cjs', plugins: [terser()] },
