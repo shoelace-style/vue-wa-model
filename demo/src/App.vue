@@ -7,7 +7,7 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + Vite" />
-  <sl-input v-sl-model="blah"></sl-input>
+  <wa-input v-wa-model="blah"></wa-input>
 </template>
 
 <style>

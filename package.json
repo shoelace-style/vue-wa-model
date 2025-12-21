@@ -1,6 +1,6 @@
 {
-  "name": "@shoelace-style/vue-sl-model",
-  "version": "1.0.1",
+  "name": "@shoelace-style/vue-wa-model",
+  "version": "1.0.0",
   "description": "A custom Vue directive that makes two-way binding Shoelace components easier.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shoelace-style/vue-sl-model.git"
+    "url": "git+https://github.com/shoelace-style/vue-wa-model.git"
   },
   "author": "Cory LaViska",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shoelace-style/vue-sl-model/issues"
+    "url": "https://github.com/shoelace-style/vue-wa-model/issues"
   },
-  "homepage": "https://github.com/shoelace-style/vue-sl-model#readme",
+  "homepage": "https://github.com/shoelace-style/vue-wa-model#readme",
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
