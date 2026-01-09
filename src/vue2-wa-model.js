@@ -1,3 +1,6 @@
+const wm = new WeakMap();
+
+
 export default function (options = {}) {
   if (!options) { options = {} }
 
@@ -8,8 +11,7 @@ export default function (options = {}) {
   if (!options.eventHandler) {
     options.eventHandler = function (el, binding, vnode) {
       return (event) => {
-        const model = binding.value
-        model.value = event.target.value
+        Vue.set(vnode.context, binding.expression, event.target.value);
       }
     };
   }
@@ -17,37 +19,28 @@ export default function (options = {}) {
   const { events, eventHandler } = options
 
   return {
-    name: 'vue-wa-model',
-    install: (app, options) => {
-      const wm = new WeakMap();
-
-      app.directive("wa-model", {
-        beforeMount(el, binding, vnode) {
-          const inputHandler = eventHandler(el, binding, vnode)
+    install: function (Vue) {
+      Vue.directive('wa-model', {
+        bind (el, binding, vnode) {
+          const inputHandler = eventHandler(binding)
           wm.set(el, inputHandler);
-
-          const modelValue = binding.value.value
-          el.value = modelValue ?? null;
-          el.defaultValue = modelValue ?? null;
-
+          el.defaultValue = binding.value ?? null
+          el.value = binding.value ?? null;
           events.forEach((eventName) => {
             el.addEventListener(eventName, inputHandler);
-          });
+          })
         },
-
-        updated(el, binding) {
-          el.value = binding.value.value ?? null;
+        componentUpdated(el, binding) {
           el.defaultValue = binding.value ?? null
+          el.value = binding.value;
         },
-
-        unmounted(el, _binding) {
+        unbind(el) {
           const inputHandler = wm.get(el);
           events.forEach((eventName) => {
             el.removeEventListener(eventName, inputHandler);
-          });
-          wm.delete(el);
-        },
-      });
-    },
+          })
+        }
+      })
+    }
   }
 };
