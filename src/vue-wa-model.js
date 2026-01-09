@@ -1,9 +1,20 @@
-import { isRef, toRef } from "vue";
+export default function (options = {}) {
+  if (!options) { options = {} }
 
-import { watch } from 'vue';
+  if (!options.events) {
+    options.events = ["input", "change"]
+  }
 
-export default function () {
-  const events = ["input", "change"]
+  if (!options.eventHandler) {
+    options.eventHandler = function (el, binding, vnode) {
+      return (event) => {
+        const model = binding.value
+        model.value = event.target.value
+      }
+    };
+  }
+
+  const { events, eventHandler } = options
 
   return {
     name: 'vue-wa-model',
@@ -11,17 +22,13 @@ export default function () {
       const wm = new WeakMap();
 
       app.directive("wa-model", {
-        beforeMount(el, binding, _vnode) {
-          const ref = binding.value
-          const inputHandler = function inputHandler(event) {
-            ref.value = event.currentTarget.value
-          };
-
+        beforeMount(el, binding, vnode) {
+          const inputHandler = eventHandler(el, binding, vnode)
           wm.set(el, inputHandler);
 
-          const initialValue = ref.value
-          el.value = initialValue ?? "";
-          el.defaultValue = initialValue ?? "";
+          const modelValue = binding.value.value
+          el.value = modelValue ?? null;
+          el.defaultValue = modelValue ?? null;
 
           events.forEach((eventName) => {
             el.addEventListener(eventName, inputHandler);
@@ -29,9 +36,7 @@ export default function () {
         },
 
         updated(el, binding) {
-          const ref = binding.value
-          const newValue = ref.value
-          el.value = newValue ?? "";
+          el.value = binding.value.value ?? null;
         },
 
         unmounted(el, _binding) {

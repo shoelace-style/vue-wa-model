@@ -34,7 +34,19 @@ app.mount('#app')
 Now you can use the `v-wa-model` directive to keep your data in sync!
 
 ```html
-<wa-input v-wa-model="name"></wa-input>
+<script setup>
+  const model = defineModel({ default: "value" })
+
+  // We wrap the model in a function to avoid unwrapping of refs when passing to `v-wa-model`.
+  // Possibly related issue?
+  // https://github.com/vuejs/rfcs/discussions/534
+  const waModel = () => model
+</script>
+
+<template>
+  <wa-input v-wa-model="waModel()"></wa-input>
+</template>
+
 ```
 
 ## Why is this necessary?
