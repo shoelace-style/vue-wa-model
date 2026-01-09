@@ -1,55 +1,47 @@
-// TODO: not sure if this is granular enough, or if we need to provide more hooks. Make this a function to allow for future extensions.
-export default function (options = {}) {
-  if (!options) { options = {} }
+import { isRef, toRef } from "vue";
 
-  if (!options.events) { options.events = [] }
-  if (!options.eventHandler) {
-    function _eventHandler(binding) {
-      return {
-        handleEvent: (event) => (binding.instance[binding.value] = event.target.value)
-      }
-    }
-    options.eventHandler = _eventHandler
-  }
+import { watch } from 'vue';
 
-  const { events, eventHandler } = options
-
-  if (!events.includes("input")) {
-    events.push("input")
-  }
-
-  if (!events.includes("change")) {
-    events.push("change")
-  }
+export default function () {
+  const events = ["input", "change"]
 
   return {
     name: 'vue-wa-model',
-    install: (app, _options) => {
+    install: (app, options) => {
       const wm = new WeakMap();
 
       app.directive("wa-model", {
         beforeMount(el, binding, _vnode) {
+          const ref = binding.value
+          const inputHandler = function inputHandler(event) {
+            ref.value = event.currentTarget.value
+          };
 
-          wm.set(el, eventHandler);
+          wm.set(el, inputHandler);
 
-          el.defaultValue = binding.value ?? null
-          el.value = binding.value ?? null;
+          const initialValue = ref.value
+          el.value = initialValue ?? "";
+          el.defaultValue = initialValue ?? "";
 
           events.forEach((eventName) => {
-            el.addEventListener(eventName, eventHandler(binding));
-          })
+            el.addEventListener(eventName, inputHandler);
+          });
         },
+
         updated(el, binding) {
-          el.value = binding.value ?? null;
+          const ref = binding.value
+          const newValue = ref.value
+          el.value = newValue ?? "";
         },
-        unmounted(el, _binding) {
-          const eventHandler = wm.get(el);
 
+        unmounted(el, _binding) {
+          const inputHandler = wm.get(el);
           events.forEach((eventName) => {
-            el.removeEventListener(eventName, eventHandler);
-          })
+            el.removeEventListener(eventName, inputHandler);
+          });
+          wm.delete(el);
         },
       });
-    }
+    },
   }
 };
