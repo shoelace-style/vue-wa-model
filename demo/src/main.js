@@ -1,13 +1,13 @@
-import "@shoelace-style/shoelace/dist/themes/light.css"
-import "@shoelace-style/shoelace/dist/components/input/input"
+import "@awesome.me/webawesome/dist/styles/webawesome.css"
+import "@awesome.me/webawesome/dist/components/input/input.js"
 
-import ShoelaceModelDirective from '@shoelace-style/vue-sl-model'
+import WebAwesomeModelDirective from '@shoelace-style/vue-wa-model'
 import { createApp } from 'vue'
 import App from './App.vue'
 
 const app = createApp(App)
 
-app.use(ShoelaceModelDirective)
+app.use(WebAwesomeModelDirective())
 
 // app.config.compilerOptions.isCustomElement = tag => tag.startsWith('sl-')
 // ^ Not needed. Defined in vite.config.js

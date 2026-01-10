@@ -1,42 +1,29 @@
-# Vue Directive for Two-way Binding Shoelace Components
+# Vue Directive for Two-way Binding Web Awesome Components
 
-A custom Vue 3 directive that makes two-way binding [Shoelace components](https://shoelace.style) easier.
-
-<details>
-<summary>Instructions for Vue 2 users</summary>
-
-If you're looking for a directive that's compatible with Vue 2, install version 1 of this package:
-
-```bash
-npm install @shoelace-style/vue-sl-model@1
-```
-
-Then [follow these instructions](https://github.com/shoelace-style/vue-sl-model/tree/77cac5afd36bd6e3321b0a738e3c1751ff006158#vue-directive-for-two-way-binding-shoelace-components) instead.
-
-</details>
+A custom Vue 3 directive that makes two-way binding [Web Awesome components](https://webawesome.com) easier.
 
 ## Usage
 
 Install the directive with this command.
 
 ```sh
-npm install @shoelace-style/vue-sl-model
+npm install @awesome.me/vue-wa-model
 ```
 
 Next, import the directive into your app and enable it like this.
 
 ```js
-import "@shoelace-style/shoelace/dist/themes/light.css"
-import "@shoelace-style/shoelace/dist/components/input/input"
+import '@awesome.me/webawesome/dist/styles/webawesome.css';
+import '@awesome.me/webawesome/dist/components/input/input.js';
 
-import ShoelaceModelDirective from '@shoelace-style/vue-sl-model'
+import WebAwesomeModelDirective from '@awesome.me/vue-wa-model'
 import { createApp } from 'vue'
 import App from './App.vue'
 
 const app = createApp(App)
-app.use(ShoelaceModelDirective)
+app.use(WebAwesomeModelDirective())
 
-app.config.compilerOptions.isCustomElement = tag => tag.startsWith('sl-')
+app.config.compilerOptions.isCustomElement = tag => tag.startsWith('wa-')
 
 // If using Vite, the above "isCustomElement" needs to be deleted and defined in vite.config.js
 // See below for an example vite.config.js
@@ -44,10 +31,22 @@ app.config.compilerOptions.isCustomElement = tag => tag.startsWith('sl-')
 app.mount('#app')
 ```
 
-Now you can use the `v-sl-model` directive to keep your data in sync!
+Now you can use the `v-wa-model` directive to keep your data in sync!
 
 ```html
-<sl-input v-sl-model="name"></sl-input>
+<script setup>
+  const model = defineModel({ default: "value" })
+
+  // We wrap the model in a function to avoid unwrapping of refs when passing to `v-wa-model`.
+  // Possibly related issue?
+  // https://github.com/vuejs/rfcs/discussions/534
+  const waModel = () => model
+</script>
+
+<template>
+  <wa-input v-wa-model="waModel()"></wa-input>
+</template>
+
 ```
 
 ## Why is this necessary?
@@ -56,13 +55,13 @@ Currently, there's [no support for v-model on custom elements](https://github.co
 
 ```html
 <!-- This doesn't work -->
-<sl-input v-model="name"></sl-input>
+<wa-input v-model="name"></wa-input>
 
 <!-- This works, but it's a bit longer -->
-<sl-input :value="name" @input="name = $event.target.value"></sl-input>
+<wa-input :value="name" @input="name = $event.target.value"></wa-input>
 ```
 
-This utility solves this problem by creating a custom directive that works just like `v-model` but for Shoelace components.
+This utility solves this problem by creating a custom directive that works just like `v-model` but for Web Awesome components.
 
 ## Using Vite
 
@@ -77,7 +76,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('sl-')
+          isCustomElement: (tag) => tag.startsWith('wa-')
         }
       },
     })
